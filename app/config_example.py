@@ -1,0 +1,5 @@
+url='',
+username='',
+password='',
+insecure=True,
+debug=False,
