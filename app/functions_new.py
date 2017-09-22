@@ -1,4 +1,5 @@
 import logging
+import datetime
 
 import ovirtsdk4 as sdk
 import ovirtsdk4.types as types
@@ -36,13 +37,26 @@ class MisseVirt():
 
         return vm
 
-    def snapshot_vm(self,vm):
+    def create_snapshot(self,vm):
         # Locate the service that manages the snapshots of the virtual machine:
         vms_service = self.connection.system_service().vms_service()
         snapshots_service = vms_service.vm_service(vm.id).snapshots_service()
 
-        snapshots_service.add(
+        vm = vms_service.vm_service(vm.id).get()
+
+        name = vm.name
+        result = snapshots_service.add(
             types.Snapshot(
-            description='My snapshot',
-        ),
-     )
+            description='Snapshot to backup {} taken at {}'.format(name,datetime.datetime.now()),
+            ),
+        )
+        return result 
+
+    def delete_snapshot(self,vm,snapshotid):
+        vms_service = self.connection.system_service().vms_service()
+        snapshots_service = vms_service.vm_service(vm.id).snapshots_service()
+        snapshot = snapshots_service.snapshot_service(snapshotid).get()
+	results = dir(snapshot.delete_protected)
+        return results
+
+

@@ -23,7 +23,8 @@ def about():
 def backup():
     vmid = request.args.get('vmid').encode('utf-8')
     vm = missevirt.get_vm(vmid)
-    print(missevirt.snapshot_vm(vm))
-
+#    snapshot = missevirt.create_snapshot(vm)
+    snapshotid = '9cb9bae7-6a30-4283-9cb2-986c6494774a'
+    print missevirt.delete_snapshot(vm,snapshotid)
     return render_template("backup.html",
                                    vm=vm,)
